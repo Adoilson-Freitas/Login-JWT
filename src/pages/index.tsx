@@ -13,6 +13,7 @@ import { BiShow, BiHide } from "react-icons/bi";
 import { AuthContext } from "../contexts/AuthContext";
 import { GetServerSideProps } from "next";
 import { parseCookies } from "nookies";
+import { withSSRGuest } from "../utils/withSSRGuest";
 
 const Home = () => {
   const [email, setEmail] = useState("");
@@ -78,18 +79,8 @@ const Home = () => {
 
 export default Home;
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const cookies = parseCookies(ctx);
-
-  if (cookies["loginjwt.token"]) {
-    return {
-      redirect: {
-        destination: "/dashboard",
-        permanent: false,
-      },
-    };
-  }
+export const getServerSideProps = withSSRGuest(async (ctx) => {
   return {
     props: {},
   };
-};
+});
