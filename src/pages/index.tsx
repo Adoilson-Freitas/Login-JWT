@@ -11,6 +11,8 @@ import { FormEvent, useContext, useState } from "react";
 import { Input } from "../components/Input";
 import { BiShow, BiHide } from "react-icons/bi";
 import { AuthContext } from "../contexts/AuthContext";
+import { GetServerSideProps } from "next";
+import { parseCookies } from "nookies";
 
 const Home = () => {
   const [email, setEmail] = useState("");
@@ -75,3 +77,19 @@ const Home = () => {
 };
 
 export default Home;
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const cookies = parseCookies(ctx);
+
+  if (cookies["loginjwt.token"]) {
+    return {
+      redirect: {
+        destination: "/dashboard",
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: {},
+  };
+};
