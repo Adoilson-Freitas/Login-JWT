@@ -1,26 +1,38 @@
 import {
+  Box,
   Button,
-  Center,
   Flex,
   InputGroup,
   InputRightElement,
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import { Input } from "../components/Input";
 import { BiShow, BiHide } from "react-icons/bi";
+import { AuthContext } from "../contexts/AuthContext";
 
 const Home = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const { signIn } = useContext(AuthContext);
+
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
 
+  async function handleSubmit(event: FormEvent) {
+    event.preventDefault();
+    const data = {
+      email,
+      password,
+    };
+    await signIn(data);
+  }
+
   return (
     <Flex w="100vw" h="100vh" align="center" justify="center">
-      <Stack spacing={3} w={600}>
+      <Stack spacing={3} w={600} as="form" onSubmit={handleSubmit}>
         <Text
           align="center"
           mb="20"
@@ -52,6 +64,11 @@ const Home = () => {
             </Button>
           </InputRightElement>
         </InputGroup>
+        <Box display="flex" justifyContent="center" alignItems="center">
+          <Button colorScheme="teal" variant="solid" type="submit" width="50%">
+            Login
+          </Button>
+        </Box>
       </Stack>
     </Flex>
   );
